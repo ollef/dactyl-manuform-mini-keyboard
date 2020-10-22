@@ -71,6 +71,7 @@
 (def keyswitch-width 14.2)
 
 (def sa-profile-key-height 12.7)
+(def dsa-profile-key-height 7.39)
 
 (def plate-thickness 2)
 (def side-nub-thickness 4)
@@ -162,7 +163,7 @@
 (def columns (range 0 ncols))
 (def rows (range 0 nrows))
 
-(def cap-top-height (+ plate-thickness sa-profile-key-height))
+(def cap-top-height (+ plate-thickness dsa-profile-key-height))
 (def row-radius (+ (/ (/ (+ mount-height extra-height) 2)
                       (Math/sin (/ α 2)))
                    cap-top-height))
