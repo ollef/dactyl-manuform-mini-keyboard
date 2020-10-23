@@ -659,7 +659,7 @@
          (screw-insert 1 lastrow         bottom-radius top-radius height [1.5 -9 0])))
 
 ; Hole Depth Y: 4.4
-(def screw-insert-height 4)
+(def screw-insert-height 5)
 
 ; Hole Diameter C: 4.1-4.4
 (def screw-insert-bottom-radius (/ 4.4 2))
