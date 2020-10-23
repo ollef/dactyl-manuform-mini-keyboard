@@ -715,6 +715,51 @@
                                screw-insert-holes))
                   (translate [0 0 -20] (cube 350 350 40))))
 
+;;;;;;;;;;;;;;;;;;
+;; Bottom plate ;;
+;;;;;;;;;;;;;;;;;;
+
+(def keyswitch-cover
+  (cube mount-width mount-height plate-thickness))
+
+(def keyswitch-covers
+  (apply union
+         (for [column columns
+               row rows
+               :when (or (.contains [2 3] column)
+                         (not= row lastrow))]
+           (key-place column row keyswitch-cover))))
+
+(def thumb-covers
+  (union
+   (thumb-1x-layout keyswitch-cover)
+   (thumb-15x-layout (rotate (/ π 2) [0 0 1] keyswitch-cover))))
+
+(def covered-model
+  (union case-walls pinky-walls connectors pinky-connectors thumb-connectors keyswitch-covers thumb-covers))
+
+(def model-outline
+     (cut
+      (translate [0 0 -0.1]
+                 (union case-walls
+                        pinky-walls
+                        screw-insert-outers))))
+
+(def plain-plate
+    (project covered-model))
+
+(def right-plate
+    (difference
+       (union (scale [0.98 0.98 1] (extrude-linear {:height 4} plain-plate))
+              (extrude-linear {:height 4} model-outline))
+       (union (translate [0 0 2] (extrude-linear {:height 4} model-outline))
+              (translate [0 0 2] (extrude-linear {:height 4} (offset -7 plain-plate)))
+              (translate [0 0 -10] screw-insert-screw-holes)
+              pro-micro-holder
+              usb-holder-holder
+              trrs-holder
+              )))
+
 (spit "things/right.scad"
       (write-scad model-right))
 
@@ -738,13 +783,10 @@
         (translate [0 0 -20] (cube 350 350 40)))))
 
 (spit "things/right-plate.scad"
-      (write-scad
-       (cut
-        (translate [0 0 -0.1]
-                   (difference (union case-walls
-                                      pinky-walls
-                                      screw-insert-outers)
-                               (translate [0 0 -10] screw-insert-screw-holes))))))
+      (write-scad right-plate))
+
+(spit "things/left-plate.scad"
+      (write-scad (mirror [-1 0 0] right-plate)))
 
 (spit "things/test.scad"
       (write-scad
